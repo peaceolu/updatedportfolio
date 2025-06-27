@@ -1,0 +1,1390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nexus Gallery | Digital Art Portfolio</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;700&family=Space+Mono:wght@400;700&display=swap">
+    <style>
+        :root {
+            --bg-dark: #0a0a0a;
+            --bg-light: #f8f8f8;
+            --text-dark: #e0e0e0;
+            --text-light: #222;
+            --accent: #6e45e2;
+            --transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-dark);
+            overflow-x: hidden;
+            transition: var(--transition);
+        }
+
+        body.light-mode {
+            background-color: var(--bg-light);
+            color: var(--text-light);
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 2rem 4rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
+            mix-blend-mode: difference;
+        }
+
+        .logo {
+            font-weight: 700;
+            font-size: 1.5rem;
+            letter-spacing: -0.5px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 3rem;
+        }
+
+        .nav-links a {
+            color: inherit;
+            text-decoration: none;
+            font-weight: 500;
+            position: relative;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background-color: var(--accent);
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .mode-toggle {
+            background: none;
+            border: none;
+            color: inherit;
+            cursor: pointer;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* Hero Section */
+        .hero {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 0 4rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero h1 {
+            font-size: clamp(3rem, 8vw, 8rem);
+            line-height: 1;
+            font-weight: 700;
+            margin-bottom: 2rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            max-width: 600px;
+            margin-bottom: 3rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        .scroll-hint {
+            position: absolute;
+            bottom: 4rem;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+            z-index: 2;
+        }
+
+        .scroll-hint span {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .scroll-hint .arrow {
+            width: 24px;
+            height: 24px;
+            border-right: 2px solid currentColor;
+            border-bottom: 2px solid currentColor;
+            transform: rotate(45deg);
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: rotate(45deg) translateY(0);
+            }
+            40% {
+                transform: rotate(45deg) translateY(-10px);
+            }
+            60% {
+                transform: rotate(45deg) translateY(-5px);
+            }
+        }
+
+        /* Projects Grid */
+        .projects {
+            padding: 8rem 4rem;
+        }
+
+        .section-title {
+            font-size: 3rem;
+            margin-bottom: 4rem;
+            position: relative;
+            display: inline-block;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 60%;
+            height: 4px;
+            background-color: var(--accent);
+        }
+
+        .project-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .project-card {
+            position: relative;
+            height: 400px;
+            overflow: hidden;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .project-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: var(--transition);
+        }
+
+        .project-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 2rem;
+            background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+            transform: translateY(100%);
+            transition: var(--transition);
+        }
+
+        .project-card:hover .project-overlay {
+            transform: translateY(0);
+        }
+
+        .project-card:hover .project-image {
+            transform: scale(1.05);
+        }
+
+        .project-title {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .project-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .project-tag {
+            background-color: var(--accent);
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+        }
+
+        /* About Section */
+        .about {
+            padding: 8rem 4rem;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+        }
+
+        .about-image {
+            position: relative;
+            height: 500px;
+        }
+
+        .about-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+
+        .about-image::before {
+            content: '';
+            position: absolute;
+            top: -20px;
+            left: -20px;
+            width: 100%;
+            height: 100%;
+            border: 2px solid var(--accent);
+            border-radius: 8px;
+            z-index: -1;
+        }
+
+        .about-content h2 {
+            font-size: 3rem;
+            margin-bottom: 2rem;
+        }
+
+        .about-content p {
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+
+        .skills {
+            margin-top: 2rem;
+        }
+
+        .skill-item {
+            margin-bottom: 1rem;
+        }
+
+        .skill-name {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+        }
+
+        .skill-bar {
+            height: 6px;
+            background-color: rgba(255,255,255,0.1);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .skill-progress {
+            height: 100%;
+            background-color: var(--accent);
+            border-radius: 3px;
+        }
+
+        /* Process Section */
+        .process {
+            padding: 8rem 4rem;
+            background-color: rgba(110, 69, 226, 0.05);
+        }
+
+        .process-steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 4rem;
+        }
+
+        .process-step {
+            padding: 2rem;
+            background-color: rgba(255,255,255,0.05);
+            border-radius: 8px;
+            transition: var(--transition);
+        }
+
+        .light-mode .process-step {
+            background-color: rgba(0,0,0,0.05);
+        }
+
+        .process-step:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 30px rgba(110, 69, 226, 0.2);
+        }
+
+        .process-number {
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--accent);
+            margin-bottom: 1rem;
+        }
+
+        .process-title {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        /* Contact Section */
+        .contact {
+            padding: 8rem 4rem;
+            text-align: center;
+        }
+
+        .contact h2 {
+            font-size: 3rem;
+            margin-bottom: 2rem;
+        }
+
+        .contact p {
+            max-width: 600px;
+            margin: 0 auto 3rem;
+            line-height: 1.6;
+        }
+
+        .contact-form {
+            max-width: 600px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+
+        .form-group {
+            grid-column: span 2;
+        }
+
+        .form-group.half {
+            grid-column: span 1;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 1rem;
+            background-color: rgba(255,255,255,0.1);
+            border: none;
+            border-radius: 4px;
+            color: inherit;
+            font-family: inherit;
+            transition: var(--transition);
+        }
+
+        .light-mode .form-input {
+            background-color: rgba(0,0,0,0.05);
+        }
+
+        .form-input:focus {
+            outline: none;
+            box-shadow: 0 0 0 2px var(--accent);
+        }
+
+        .form-textarea {
+            min-height: 150px;
+            resize: vertical;
+        }
+
+        .submit-btn {
+            grid-column: span 2;
+            padding: 1rem 2rem;
+            background-color: var(--accent);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-family: inherit;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(110, 69, 226, 0.4);
+        }
+
+        /* Footer */
+        footer {
+            padding: 4rem;
+            text-align: center;
+            background-color: rgba(255,255,255,0.05);
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .social-link {
+            color: inherit;
+            font-size: 1.5rem;
+            transition: var(--transition);
+        }
+
+        .social-link:hover {
+            color: var(--accent);
+            transform: translateY(-3px);
+        }
+
+        .copyright {
+            font-size: 0.9rem;
+            opacity: 0.7;
+        }
+
+        /* Project Modal */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.9);
+            z-index: 1000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: var(--transition);
+        }
+
+        .modal.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .modal-content {
+            width: 80%;
+            max-width: 1200px;
+            max-height: 90vh;
+            overflow-y: auto;
+            background-color: var(--bg-dark);
+            border-radius: 8px;
+            padding: 3rem;
+            position: relative;
+        }
+
+        .light-mode .modal-content {
+            background-color: var(--bg-light);
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            color: inherit;
+            font-size: 2rem;
+            cursor: pointer;
+        }
+
+        .modal-header {
+            margin-bottom: 2rem;
+        }
+
+        .modal-title {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .modal-subtitle {
+            font-size: 1.2rem;
+            opacity: 0.8;
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .modal-tag {
+            background-color: var(--accent);
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+        }
+
+        .modal-body {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 3rem;
+        }
+
+        .modal-gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1rem;
+        }
+
+        .modal-image {
+            width: 100%;
+            height: auto;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .modal-image:hover {
+            transform: scale(1.02);
+        }
+
+        .modal-details {
+            position: sticky;
+            top: 1rem;
+            height: fit-content;
+        }
+
+        .modal-description {
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+
+        .modal-links a {
+            display: inline-block;
+            padding: 0.75rem 1.5rem;
+            background-color: var(--accent);
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            margin-right: 1rem;
+            margin-bottom: 1rem;
+            transition: var(--transition);
+        }
+
+        .modal-links a:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(110, 69, 226, 0.4);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .about {
+                grid-template-columns: 1fr;
+            }
+
+            .modal-body {
+                grid-template-columns: 1fr;
+            }
+
+            .modal-details {
+                position: static;
+            }
+        }
+
+        @media (max-width: 768px) {
+            nav {
+                padding: 1.5rem;
+            }
+
+            .hero, .projects, .about, .process, .contact {
+                padding: 6rem 1.5rem;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .contact-form {
+                grid-template-columns: 1fr;
+            }
+
+            .form-group.half {
+                grid-column: span 2;
+            }
+
+            .modal-content {
+                width: 95%;
+                padding: 1.5rem;
+            }
+        }
+
+    
+.gallery-container {
+  perspective: 1200px;
+  margin: 5rem 0;
+}
+
+.gallery-track {
+  display: flex;
+  gap: 2rem;
+  transform-style: preserve-3d;
+  transition: transform 0.5s ease-out;
+}
+
+.gallery-item {
+  width: 300px;
+  height: 400px;
+  position: relative;
+  transform-style: preserve-3d;
+  transition: all 0.5s ease;
+}
+
+
+.parallax-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  z-index: 1;
+}
+
+.parallax-layer {
+  position: absolute;
+  width: 120%;
+  height: 120%;
+  background-size: contain;
+  background-repeat: no-repeat;
+  will-change: transform;
+}
+
+.parallax-layer:nth-child(1) {
+  background-image: url('abstract-layer1.svg');
+  opacity: 0.3;
+}
+
+.parallax-layer:nth-child(2) {
+  background-image: url('abstract-layer2.svg');
+  opacity: 0.2;
+}
+
+.parallax-layer:nth-child(3) {
+  background-image: url('abstract-layer3.svg');
+  opacity: 0.1;
+}
+
+
+/* AI Process Visualization */
+.ai-process {
+  position: relative;
+  width: 100%;
+  height: 500px;
+  margin: 4rem 0;
+}
+
+#process-canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+.process-nodes {
+  display: flex;
+  justify-content: space-between;
+  position: relative;
+  z-index: 2;
+  height: 100%;
+}
+
+.node {
+  background-color: var(--accent);
+  color: white;
+  padding: 1rem 2rem;
+  border-radius: 50px;
+  font-weight: 500;
+  align-self: center;
+  position: relative;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(110, 69, 226, 0.3);
+}
+
+.node.active {
+  transform: scale(1.1);
+  box-shadow: 0 8px 25px rgba(110, 69, 226, 0.5);
+}
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <div class="logo">NEXUS</div>
+        <div class="nav-links">
+            <a href="#projects">Projects</a>
+            <a href="#about">About</a>
+            <a href="#process">Process</a>
+            <a href="#contact">Contact</a>
+        </div>
+        <button class="mode-toggle">
+            <span class="mode-icon">☽</span>
+            <span class="mode-text">Dark</span>
+        </button>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <!-- Add to your hero section -->
+<div class="parallax-container">
+  <div class="parallax-layer" data-depth="0.1"></div>
+  <div class="parallax-layer" data-depth="0.3"></div>
+  <div class="parallax-layer" data-depth="0.6"></div>
+</div>
+
+
+        <h1>Digital Art <br>Reimagined</h1>
+        <p>Creating immersive experiences through bold design and innovative technology. Each project is a journey from concept to reality.</p>
+        <div class="scroll-hint">
+            <span>Explore</span>
+            <div class="arrow"></div>
+        </div>
+    </section>
+
+    <!-- Projects Section -->
+    <section class="projects" id="projects">
+        <h2 class="section-title">Selected Works</h2>
+        <div class="project-grid">
+            <!-- Project 1 -->
+            <div class="project-card" data-project="1">
+                <img src="IMG_7809.png" alt="Project 1" class="project-image">
+                <div class="project-overlay">
+                    <h3 class="project-title">Neon Dreams</h3>
+                    <div class="project-tags">
+                        <span class="project-tag">UI/UX</span>
+                        <span class="project-tag">Branding</span>
+                    </div>
+                    <p>Futuristic interface design for a music streaming platform</p>
+                </div>
+            </div>
+
+            <!-- Project 2 -->
+            <div class="project-card" data-project="2">
+                <img src="IMG_7810.jpeg" alt="Project 2" class="project-image">
+                <div class="project-overlay">
+                    <h3 class="project-title">Quantum</h3>
+                    <div class="project-tags">
+                        <span class="project-tag">Web Design</span>
+                        <span class="project-tag">Development</span>
+                    </div>
+                    <p>Interactive dashboard for data visualization</p>
+                </div>
+            </div>
+
+            <!-- Project 3 -->
+            <div class="project-card" data-project="3">
+                <img src="IMG_7808.png" alt="Project 3" class="project-image">
+                <div class="project-overlay">
+                    <h3 class="project-title">Aurora</h3>
+                    <div class="project-tags">
+                        <span class="project-tag">Brand Identity</span>
+                        <span class="project-tag">Packaging</span>
+                    </div>
+                    <p>Complete rebrand for a sustainable skincare line</p>
+                </div>
+            </div>
+
+            <!-- Project 4 -->
+            <div class="project-card" data-project="4">
+                <img src="IMG_7807.jpeg" alt="Project 4" class="project-image">
+                <div class="project-overlay">
+                    <h3 class="project-title">Cosmic</h3>
+                    <div class="project-tags">
+                        <span class="project-tag">Illustration</span>
+                        <span class="project-tag">Animation</span>
+                    </div>
+                    <p>Series of sci-fi themed digital illustrations</p>
+                </div>
+            </div>
+
+            <!-- Project 5 -->
+            <div class="project-card" data-project="5">
+                <img src="IMG_7806.jpeg" alt="Project 5" class="project-image">
+                <div class="project-overlay">
+                    <h3 class="project-title">Pulse</h3>
+                    <div class="project-tags">
+                        <span class="project-tag">Mobile App</span>
+                        <span class="project-tag">UI Design</span>
+                    </div>
+                    <p>Fitness tracking application with AR features</p>
+                </div>
+            </div>
+
+            <!-- Project 6 -->
+            <div class="project-card" data-project="6">
+                <img src="IMG_7810.jpeg" alt="Project 6" class="project-image">
+                <div class="project-overlay">
+                    <h3 class="project-title">Typeform</h3>
+                    <div class="project-tags">
+                        <span class="project-tag">Typography</span>
+                        <span class="project-tag">Print</span>
+                    </div>
+                    <p>Experimental typography for a design magazine</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section class="about" id="about">
+        <div class="about-image">
+            <img src="AF0C5B40-CC89-4DB9-A97D-A2591780E42E.PNG" alt="Designer Portrait">
+        </div>
+        <div class="about-content">
+            <h2>The Designer</h2>
+            <p>With over 8 years of experience in digital design, I specialize in creating immersive experiences that blend aesthetics with functionality. My approach combines meticulous attention to detail with bold creative vision.</p>
+            <p>I believe design should tell a story and evoke emotion, whether it's through a website, app, or brand identity. Each project is an opportunity to push boundaries and explore new possibilities.</p>
+            
+            <div class="skills">
+                <div class="skill-item">
+                    <div class="skill-name">
+                        <span>UI/UX Design</span>
+                        <span>95%</span>
+                    </div>
+                    <div class="skill-bar">
+                        <div class="skill-progress" style="width: 95%"></div>
+                    </div>
+                </div>
+                
+                <div class="skill-item">
+                    <div class="skill-name">
+                        <span>Branding</span>
+                        <span>90%</span>
+                    </div>
+                    <div class="skill-bar">
+                        <div class="skill-progress" style="width: 90%"></div>
+                    </div>
+                </div>
+                
+                <div class="skill-item">
+                    <div class="skill-name">
+                        <span>Motion Design</span>
+                        <span>85%</span>
+                    </div>
+                    <div class="skill-bar">
+                        <div class="skill-progress" style="width: 85%"></div>
+                    </div>
+                </div>
+                
+                <div class="skill-item">
+                    <div class="skill-name">
+                        <span>Frontend Dev</span>
+                        <span>80%</span>
+                    </div>
+                    <div class="skill-bar">
+                        <div class="skill-progress" style="width: 80%"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+        <!-- Process Section -->
+<section class="process" id="process">
+    <h2 class="section-title"> Design Process</h2>
+    <p style="max-width: 800px; margin: 0 auto 2rem; text-align: center;">
+        Every masterpiece begins with a method. Here's how I transform ideas into impactful digital experiences.
+    </p>
+    
+    <!-- AI Process Visualization -->
+    <div class="ai-process">
+        <canvas id="process-canvas"></canvas>
+        <div class="process-nodes">
+            <div class="node" data-step="1">Research</div>
+            <div class="node" data-step="2">Ideate</div>
+            <div class="node" data-step="3">Design</div>
+            <div class="node" data-step="4">Test</div>
+            <div class="node" data-step="5">Refine</div>
+        </div>
+    </div>
+        
+        <div class="process-steps">
+            <div class="process-step">
+                <div class="process-number">01</div>
+                <h3 class="process-title">Discovery</h3>
+                <p>In-depth research to understand the problem space, target audience, and project goals through interviews, surveys, and competitive analysis.</p>
+            </div>
+            
+            <div class="process-step">
+                <div class="process-number">02</div>
+                <h3 class="process-title">Concept</h3>
+                <p>Brainstorming sessions to generate innovative solutions, followed by sketching and low-fidelity prototyping to explore directions.</p>
+            </div>
+            
+            <div class="process-step">
+                <div class="process-number">03</div>
+                <h3 class="process-title">Design</h3>
+                <p>Creating high-fidelity mockups with attention to visual hierarchy, typography, color theory, and micro-interactions.</p>
+            </div>
+            
+            <div class="process-step">
+                <div class="process-number">04</div>
+                <h3 class="process-title">Refine</h3>
+                <p>User testing and iterative improvements based on feedback, ensuring the design meets both business and user needs.</p>
+            </div>
+            
+            <div class="process-step">
+                <div class="process-number">05</div>
+                <h3 class="process-title">Deliver</h3>
+                <p>Preparing final assets, design systems, and documentation for handoff to developers or stakeholders.</p>
+            </div>
+        </div>
+ 
+
+    </section>
+
+    <!-- Contact Section -->
+    <section class="contact" id="contact">
+        <h2>Let's Create Together</h2>
+        <p>Have a project in mind or want to discuss potential collaborations? I'd love to hear from you. Drop me a message and let's start a conversation.</p>
+        
+        <form class="contact-form">
+            <div class="form-group half">
+                <input type="text" class="form-input" placeholder="Name" required>
+            </div>
+            <div class="form-group half">
+                <input type="email" class="form-input" placeholder="Email" required>
+            </div>
+            <div class="form-group">
+                <input type="text" class="form-input" placeholder="Subject">
+            </div>
+            <div class="form-group">
+                <textarea class="form-input form-textarea" placeholder="Message" required></textarea>
+            </div>
+            <button type="submit" class="submit-btn">Send Message</button>
+        </form>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="social-links">
+            <a href="#" class="social-link">Dribbble</a>
+            <a href="#" class="social-link">Behance</a>
+            <a href="#" class="social-link">Instagram</a>
+            <a href="#" class="social-link">LinkedIn</a>
+            <a href="#" class="social-link">Twitter</a>
+        </div>
+        <p class="copyright">© 2023 Nexus Gallery. All rights reserved.</p>
+    </footer>
+
+    <!-- Project Modals -->
+    <div class="modal" id="project-modal-1">
+        <div class="modal-content">
+            <button class="close-modal">&times;</button>
+            <div class="modal-header">
+                <h3 class="modal-title">Neon Dreams</h3>
+                <p class="modal-subtitle">Music Streaming Platform UI/UX Design</p>
+                <div class="modal-tags">
+                    <span class="modal-tag">UI/UX</span>
+                    <span class="modal-tag">Branding</span>
+                    <span class="modal-tag">Web Design</span>
+                    <span class="modal-tag">2023</span>
+                </div>
+            </div>
+            <div class="modal-body">
+                <div class="modal-gallery">
+                    <img src="https://source.unsplash.com/random/600x400/?music,app" alt="Neon Dreams 1" class="modal-image">
+                    <img src="https://source.unsplash.com/random/600x400/?music,interface" alt="Neon Dreams 2" class="modal-image">
+                    <img src="https://source.unsplash.com/random/600x400/?music,player" alt="Neon Dreams 3" class="modal-image">
+                    <img src="https://source.unsplash.com/random/600x400/?music,dashboard" alt="Neon Dreams 4" class="modal-image">
+                    <img src="https://source.unsplash.com/random/600x400/?music,mobile" alt="Neon Dreams 5" class="modal-image">
+                    <img src="https://source.unsplash.com/random/600x400/?music,wireframe" alt="Neon Dreams 6" class="modal-image">
+                </div>
+                <div class="modal-details">
+                    <div class="modal-description">
+                        <p>Neon Dreams reimagines music discovery through a vibrant, immersive interface that adapts to the mood and tempo of the music being played. The platform uses dynamic color algorithms to create unique visual experiences for each song.</p>
+                        <p>Key features include 3D audio visualization, collaborative playlist creation, and AI-powered recommendations that learn from both your listening habits and emotional responses.</p>
+                        <p>The project involved extensive user research to understand how people discover and interact with music digitally, resulting in an interface that feels both futuristic and intuitive.</p>
+                    </div>
+                    <div class="modal-links">
+                        <a href="#" target="_blank">View Live</a>
+                        <a href="#" target="_blank">Case Study</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="project-modal-2">
+        <div class="modal-content">
+            <button class="close-modal">&times;</button>
+            <div class="modal-header">
+                <h3 class="modal-title">Quantum Dashboard</h3>
+                <p class="modal-subtitle">Data Visualization Interface</p>
+                <div class="modal-tags">
+                    <span class="modal-tag">Web Design</span>
+                    <span class="modal-tag">Development</span>
+                    <span class="modal-tag">Data Viz</span>
+                    <span class="modal-tag">2022</span>
+                </div>
+            </div>
+            <div class="modal-body">
+                <div class="modal-gallery">
+                    <img src="https://source.unsplash.com/random/600x400/?dashboard,data" alt="Quantum 1" class="modal-image">
+                    <img src="https://source.unsplash.com/random/600x400/?analytics,chart" alt="Quantum 2" class="modal-image">
+                    <img src="https://source.unsplash.com/random/600x400/?graph,ui" alt="Quantum 3" class="modal-image">
+                </div>
+                <div class="modal-details">
+                    <div class="modal-description">
+                        <p>Quantum transforms complex datasets into intuitive, interactive visualizations that help businesses uncover insights. The dashboard features customizable widgets, real-time data streaming, and collaborative annotation tools.</p>
+                        <p>The challenge was to create a system that could handle massive datasets while remaining responsive and user-friendly. The solution combines WebGL for high-performance rendering with a clean, minimalist interface that focuses attention on the data.</p>
+                    </div>
+                    <div class="modal-links">
+                        <a href="#" target="_blank">View Demo</a>
+                        <a href="#" target="_blank">Case Study</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add more modals for other projects -->
+
+    <script>
+        // Dark/Light Mode Toggle
+        const modeToggle = document.querySelector('.mode-toggle');
+        const modeIcon = document.querySelector('.mode-icon');
+        const modeText = document.querySelector('.mode-text');
+        const body = document.body;
+
+        modeToggle.addEventListener('click', () => {
+            body.classList.toggle('light-mode');
+            
+            if (body.classList.contains('light-mode')) {
+                modeIcon.textContent = '☀';
+                modeText.textContent = 'Light';
+            } else {
+                modeIcon.textContent = '☽';
+                modeText.textContent = 'Dark';
+            }
+        });
+
+        // Project Modal Functionality
+        const projectCards = document.querySelectorAll('.project-card');
+        const modals = document.querySelectorAll('.modal');
+        const closeButtons = document.querySelectorAll('.close-modal');
+
+        projectCards.forEach(card => {
+            card.addEventListener('click', () => {
+                const projectId = card.getAttribute('data-project');
+                const modal = document.getElementById(`project-modal-${projectId}`);
+                modal.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            });
+        });
+
+        closeButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const modal = button.closest('.modal');
+                modal.classList.remove('active');
+                document.body.style.overflow = 'auto';
+            });
+        });
+
+        modals.forEach(modal => {
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    modal.classList.remove('active');
+                    document.body.style.overflow = 'auto';
+                }
+            });
+        });
+
+        // Smooth Scrolling
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // Scroll Animation
+        const animateOnScroll = () => {
+            const elements = document.querySelectorAll('.process-step, .project-card, .about-image, .about-content');
+            
+            elements.forEach(element => {
+                const elementPosition = element.getBoundingClientRect().top;
+                const screenPosition = window.innerHeight / 1.3;
+                
+                if (elementPosition < screenPosition) {
+                    element.style.opacity = '1';
+                    element.style.transform = 'translateY(0)';
+                }
+            });
+        };
+
+        // Set initial state for animated elements
+        document.querySelectorAll('.process-step, .project-card, .about-image, .about-content').forEach(element => {
+            element.style.opacity = '0';
+            element.style.transform = 'translateY(20px)';
+            element.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+        });
+
+        window.addEventListener('scroll', animateOnScroll);
+        window.addEventListener('load', animateOnScroll);
+
+        // Form Submission
+        const contactForm = document.querySelector('.contact-form');
+        contactForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            alert('Thank you for your message! I will get back to you soon.');
+            contactForm.reset();
+        });
+
+        /* Add this to your JavaScript */
+let currentPosition = 0;
+const galleryTrack = document.querySelector('.gallery-track');
+const galleryItems = document.querySelectorAll('.gallery-item');
+
+function updateGallery() {
+  galleryTrack.style.transform = `translateX(${currentPosition}px)`;
+  
+  galleryItems.forEach((item, index) => {
+    const distanceFromCenter = Math.abs(index * 320 + currentPosition - window.innerWidth/2);
+    const scale = 1 - Math.min(distanceFromCenter / 2000, 0.3);
+    const zIndex = Math.round(100 - distanceFromCenter / 10);
+    const opacity = 1 - Math.min(distanceFromCenter / 1000, 0.5);
+    
+    item.style.transform = `scale(${scale})`;
+    item.style.zIndex = zIndex;
+    item.style.opacity = opacity;
+  });
+}
+
+// Add mouse wheel/arrow key navigation
+window.addEventListener('wheel', (e) => {
+  if (e.deltaY > 0) {
+    currentPosition -= 100;
+  } else {
+    currentPosition += 100;
+  }
+  updateGallery();
+});
+
+
+// Add this to your JavaScript
+class Particle {
+  constructor(canvas) {
+    this.x = Math.random() * canvas.width;
+    this.y = Math.random() * canvas.height;
+    this.size = Math.random() * 3 + 1;
+    this.speedX = Math.random() * 2 - 1;
+    this.speedY = Math.random() * 2 - 1;
+    this.color = `hsl(${Math.random() * 60 + 200}, 80%, 60%)`;
+  }
+  
+  update() {
+    this.x += this.speedX;
+    this.y += this.speedY;
+    if (this.x < 0 || this.x > canvas.width) this.speedX *= -1;
+    if (this.y < 0 || this.y > canvas.height) this.speedY *= -1;
+  }
+  
+  draw() {
+    ctx.fillStyle = this.color;
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+    ctx.fill();
+  }
+}
+
+// Initialize canvas and particles
+const canvas = document.createElement('canvas');
+const ctx = canvas.getContext('2d');
+canvas.style.position = 'fixed';
+canvas.style.top = '0';
+canvas.style.left = '0';
+canvas.style.zIndex = '-1';
+canvas.style.opacity = '0.3';
+document.body.appendChild(canvas);
+
+let particles = [];
+function initParticles() {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+  particles = Array(100).fill().map(() => new Particle(canvas));
+}
+
+function animateParticles() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  particles.forEach(p => {
+    p.update();
+    p.draw();
+  });
+  requestAnimationFrame(animateParticles);
+}
+
+initParticles();
+animateParticles();
+
+// Add this to your JavaScript
+const colorThemes = {
+  1: { primary: '#6e45e2', secondary: '#88d3ce' },
+  2: { primary: '#ff6b6b', secondary: '#4ecdc4' },
+  3: { primary: '#48dbfb', secondary: '#1dd1a1' },
+  4: { primary: '#feca57', secondary: '#ff6b6b' },
+  5: { primary: '#5f27cd', secondary: '#00d2d3' },
+  6: { primary: '#1dd1a1', secondary: '#ff9ff3' }
+};
+
+document.querySelectorAll('.project-card').forEach(card => {
+  card.addEventListener('mouseenter', () => {
+    const projectId = card.getAttribute('data-project');
+    const theme = colorThemes[projectId];
+    document.documentElement.style.setProperty('--accent', theme.primary);
+    card.style.boxShadow = `0 20px 40px ${theme.secondary}33`;
+  });
+  
+  card.addEventListener('mouseleave', () => {
+    document.documentElement.style.setProperty('--accent', '#6e45e2');
+    card.style.boxShadow = 'none';
+  });
+});
+
+// Add parallax effect
+window.addEventListener('scroll', () => {
+  const scrollY = window.scrollY;
+  document.querySelectorAll('.parallax-layer').forEach(layer => {
+    const depth = layer.getAttribute('data-depth');
+    const movement = scrollY * depth;
+    layer.style.transform = `translateY(${movement}px)`;
+  });
+});
+    
+
+// Neural Network Process Visualization
+const processCanvas = document.getElementById('process-canvas');
+const pCtx = processCanvas.getContext('2d');
+
+function resizeProcessCanvas() {
+    processCanvas.width = processCanvas.offsetWidth;
+    processCanvas.height = processCanvas.offsetHeight;
+    drawProcessConnections();
+}
+
+function drawProcessConnections() {
+    pCtx.clearRect(0, 0, processCanvas.width, processCanvas.height);
+    
+    const nodes = document.querySelectorAll('.node');
+    nodes.forEach((node, i) => {
+        const rect = node.getBoundingClientRect();
+        const x = rect.left + rect.width/2 - processCanvas.getBoundingClientRect().left;
+        const y = rect.top + rect.height/2 - processCanvas.getBoundingClientRect().top;
+        
+        if (i > 0) {
+            const prevRect = nodes[i-1].getBoundingClientRect();
+            const prevX = prevRect.left + prevRect.width/2 - processCanvas.getBoundingClientRect().left;
+            const prevY = prevRect.top + prevRect.height/2 - processCanvas.getBoundingClientRect().top;
+            
+            // Draw connecting line
+            pCtx.beginPath();
+            pCtx.moveTo(prevX, prevY);
+            pCtx.bezierCurveTo(
+                prevX + 100, prevY,
+                x - 100, y,
+                x, y
+            );
+            pCtx.strokeStyle = `hsla(${200 + i*30}, 80%, 60%, 0.6)`;
+            pCtx.lineWidth = 2;
+            pCtx.stroke();
+            
+            // Draw animated pulse
+            if (node.classList.contains('active')) {
+                const progress = Date.now() % 2000 / 2000;
+                const pulseX = prevX + (x - prevX) * progress;
+                const pulseY = prevY + (y - prevY) * progress;
+                
+                pCtx.beginPath();
+                pCtx.arc(pulseX, pulseY, 5 + 3 * Math.sin(progress * Math.PI), 0, Math.PI * 2);
+                pCtx.fillStyle = `hsla(${200 + i*30}, 80%, 60%, 0.8)`;
+                pCtx.fill();
+            }
+        }
+    });
+    
+    requestAnimationFrame(drawProcessConnections);
+}
+
+// Animate process steps
+function animateProcess() {
+    const steps = [1, 2, 3, 4, 5];
+    let current = 0;
+    
+    setInterval(() => {
+        document.querySelectorAll('.node').forEach(node => {
+            node.classList.remove('active');
+        });
+        
+        document.querySelector(`.node[data-step="${steps[current]}"]`).classList.add('active');
+        current = (current + 1) % steps.length;
+    }, 1500);
+}
+
+// Initialize
+resizeProcessCanvas();
+window.addEventListener('resize', resizeProcessCanvas);
+animateProcess();
+
+
+// Add voice command functionality
+if ('webkitSpeechRecognition' in window) {
+  const recognition = new webkitSpeechRecognition();
+  recognition.continuous = true;
+  recognition.interimResults = true;
+  
+  recognition.onresult = (event) => {
+    const transcript = Array.from(event.results)
+      .map(result => result[0])
+      .map(result => result.transcript)
+      .join('');
+    
+    if (transcript.includes('show projects')) {
+      document.querySelector('#projects').scrollIntoView({ behavior: 'smooth' });
+    }
+    if (transcript.includes('dark mode')) {
+      document.body.classList.remove('light-mode');
+    }
+    if (transcript.includes('light mode')) {
+      document.body.classList.add('light-mode');
+    }
+  };
+  
+  document.addEventListener('mouseenter', '.voice-control', () => {
+    recognition.start();
+    // Show UI feedback that listening is active
+  });
+  
+  document.addEventListener('mouseleave', '.voice-control', () => {
+    recognition.stop();
+  });
+}
+
+</script>
+</body>
+</html>
